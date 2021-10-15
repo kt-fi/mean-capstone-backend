@@ -1,0 +1,11 @@
+{
+  "name": "mean-capstone-backend",
+  "version": "1.0.0",
+  "description": "Mean Capstone Project Backend",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christopher James Hillman",
+  "license": "ISC"
+}
