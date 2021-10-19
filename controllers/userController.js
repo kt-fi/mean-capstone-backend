@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { validationResult } = require('express-validator');
 const { uid } = require("uid");
 const bcrypt = require("bcrypt");
 const User = require("../schemas/userSchema");
@@ -6,7 +7,12 @@ const User = require("../schemas/userSchema");
 
 //CREATE NEW USER (ADMIN OR USER)
 let createUser = async (req, res) => {
-    
+    let errors = validationResult(req);
+
+    if(!errors.isEmpty()){
+       return res.status(422).json({msg:"errors exist in your sign up form please check all required inpts"})
+    }
+
     let { uname, email, utype, password } = req.body;
 
     let userExists;
@@ -71,6 +77,12 @@ let createUser = async (req, res) => {
 
     //EDIT A USER ACCOUNT (ADD ADDRESS)
     let addAddress = async (req, res) => {
+        let errors = validationResult(req);
+
+        if(!errors.isEmpty()){
+           return res.status(422).json({msg:"errors exist in your sign up form please check all required inpts"})
+        }
+
         const uid = req.params.uid;
         let { address } = req.body;
         let user;
