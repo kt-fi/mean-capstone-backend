@@ -51,28 +51,59 @@ let createUser = async (req, res) => {
         let { email, password } = req.body;
         let user;
         let isPassword
+
         try{
             user = await User.findOne({email: email});
-
             if(user){
-
               isPassword = await bcrypt.compare(password, user.password)
-                
                 if(isPassword == true){
                     res.json(user);
                 }else{
                     res.send("password entered is incorrect");
                 }
-                
             }else{
-                res.send("unable to find user");
+                res.send("This user cannot be found, please check credentials and try again!");
             }
         }catch(err){
             res.send("Unknown Fail");
         }
     }
 
-    //EDIT A USER ACCOUNT
+    //EDIT A USER ACCOUNT (ADD ADDRESS)
+    let addAddress = async (req, res) => {
+        const uid = req.params.uid;
+        let { address } = req.body;
+        let user;
+        try{
+            user = await User.findOne({uid:uid})
+            if(user){
+                user.address = address;
+                user.save()
+                res.status(200).json(user)
+            }else{
+                 res.status(500).send("Adding Address to user has been unsuccesful, please try again!!")
+            }
+        }catch(err){
+            res.status(502).send("Something went wrong! Please try again")
+        }
+    }
+
+    //DELETE A USER ACCOUNT
+    let deleteUser = async (req, res) => {
+        const uid = req.params.uid;
+        let uidExists;
+        try{
+            uidExists = await User.findOne({uid})
+            if(uidExists){
+                await User.deleteOne({uid:uid});
+                res.send(`user with id ${uid} has been succesfuly removed from the database`) 
+            }else{
+                res.send(`user with id ${uid} does not appear to exist`) 
+            }
+        }catch(err){
+            console.log("error")
+        }
+    }
     
 
-module.exports = { createUser, getUser }
+module.exports = { createUser, getUser, addAddress, deleteUser }

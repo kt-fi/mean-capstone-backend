@@ -8,7 +8,7 @@ const userSchema = new Schema({
     email: {type: String, required: true},
     utype: {type: String, required: true},
     password: {type: String, required: true},
-    address: {type:String, required: false},
+    address: {type: Object, required: false},
     basket: [{type: mongoose.Types.ObjectId, ref: 'Product'}],
     likedItems: [{type: mongoose.Types.ObjectId, ref: 'Product'}]
 })
