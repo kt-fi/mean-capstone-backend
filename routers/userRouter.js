@@ -11,6 +11,7 @@ router.post("/createUser",[check('uname').not().isEmpty().isLength({min:5}),
                             userController.createUser);
 
 router.get("/getUser", userController.getUser);
+router.put("/:uid/updateUser",[check("uname").not().isEmpty(), check("email").isEmail()], userController.updateUser)
 router.put("/:uid/addAddress",[check('address').not().isEmpty()], userController.addAddress);
 router.delete("/:uid/deleteUser", userController.deleteUser);
 

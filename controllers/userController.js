@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const { validationResult } = require('express-validator');
 const { uid } = require("uid");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+let { secretKey } = require("../config/config")
 const User = require("../schemas/userSchema");
 
 
@@ -38,7 +41,9 @@ let createUser = async (req, res) => {
 
             await newUser.save((err, data)=>{
                 if(!err){
-                    res.status(201).json(data)
+                    let payLoad = {uid: uid, email:email, utype: utype};
+                    let token = jwt.sign(payLoad, secretKey)
+                    res.status(201).json({data, token})
                 }else{
                     res.status(500).send("An error has occured whilst saving user, please try again!")
                 }
@@ -72,6 +77,36 @@ let createUser = async (req, res) => {
             }
         }catch(err){
             res.send("Unknown Fail");
+        }
+    }
+
+    //EDIT USER DETAILS
+
+    let updateUser = async (req, res) => {
+        let errors = validationResult(req);
+
+        if(!errors.isEmpty()){
+            return res.json(errors)
+        }
+    
+        let uid = req.params.uid;
+        let { uname, email, address } = req.body;
+
+        let updateUser;
+
+        try{
+          updateUser = await User.findOne({uid})
+
+          updateUser.uname = uname;
+          updateUser.email = email;
+          updateUser.address = address;
+
+          updateUser.save();
+          return res.json(updateUser)
+
+
+        }catch(err){
+            console.log(err)
         }
     }
 
@@ -118,4 +153,4 @@ let createUser = async (req, res) => {
     }
     
 
-module.exports = { createUser, getUser, addAddress, deleteUser }
+module.exports = { createUser, getUser, updateUser, addAddress, deleteUser }
