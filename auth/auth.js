@@ -20,7 +20,7 @@ let verifyUserToken = (req, res, next) => {
 }
 
 let IsUser = async (req, res, next) =>{
-    if(req.user.utype === "user"){
+    if(req.user.utype == "user"){
         next()
     }else{
         return res.send("Unauthorized")
@@ -28,7 +28,7 @@ let IsUser = async (req, res, next) =>{
 }
 
 let IsAdmin = async (req, res, next) =>{
-    if(req.user.utype === "admin"){
+    if(req.user.utype == "admin"){
         next()
     }else{
         return res.send("Unauthorized")

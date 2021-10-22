@@ -2,6 +2,7 @@ let express = require("express");
 let mongoose = require("mongoose");
 
 let userRoutes = require("./routers/userRouter");
+let productRoutes = require("./routers/productRouter");
 
 let app = express();
 
@@ -18,8 +19,8 @@ mongoose.connect("mongodb://localhost:27017/myCapstoneDB", { useUnifiedTopology:
 
 //ROUTES
 
-app.use("/users", userRoutes)
-
+app.use("/users", userRoutes);
+app.use("/products", productRoutes);
 
 
 
