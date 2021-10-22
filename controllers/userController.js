@@ -68,7 +68,9 @@ let createUser = async (req, res) => {
             if(user){
               isPassword = await bcrypt.compare(password, user.password)
                 if(isPassword == true){
-                    res.json(user);
+                    let payLoad = {uid: user.uid, email: user.email, utype: user.utype};
+                    let token = jwt.sign(payLoad, secretKey)
+                    res.json({user, token});
                 }else{
                     res.send("password entered is incorrect");
                 }
