@@ -1,3 +1,3 @@
 const secretKey = "mySecretKeyJWT"
 
-module.exports = {secretKey};
+module.exports = { secretKey };

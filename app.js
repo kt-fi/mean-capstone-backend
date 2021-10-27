@@ -1,5 +1,6 @@
 let express = require("express");
 let mongoose = require("mongoose");
+let cors = require("cors")
 
 let userRoutes = require("./routers/userRouter");
 let productRoutes = require("./routers/productRouter");
@@ -7,6 +8,7 @@ let productRoutes = require("./routers/productRouter");
 let app = express();
 
 app.use(express.json())
+app.use(cors())
 
 //CONNECT TO MONGODB
 mongoose.connect("mongodb://localhost:27017/myCapstoneDB", { useUnifiedTopology: true, useNewUrlParser: true }, (err)=>{

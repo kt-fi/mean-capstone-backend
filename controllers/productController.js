@@ -42,4 +42,31 @@ let getProducts = async (req, res) => {
     }
 }
 
-module.exports = { createProduct, getProducts }
+let editProduct = async (req, res) => {
+
+    let pid = req.params.pid;
+    let { pname, description, price, pimage, offer } = req.body;
+
+    let product;
+
+    try{
+        product = await Product.findOne({pid});
+        if(product){
+            product.pname = pname;
+            product.description = description;
+            product.price = price;
+            product.pimage = pimage;
+            product.offer = offer;
+
+            product.save()
+            res.json(product)
+        }else{
+            res.json({msg: "Unable to Update the product please try again."})
+        }
+    }catch(err){
+        res.send("err")
+    }
+    
+}
+
+module.exports = { createProduct, getProducts, editProduct }

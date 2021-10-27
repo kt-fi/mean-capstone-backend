@@ -26,7 +26,7 @@ let createUser = async (req, res) => {
         try{
             userExists = await User.findOne({email: email})
         }catch(err){
-            res.send("An unexpected error occured!!")
+            res.status(500).send("An unexpected error occured!!")
         }
 
         if(!userExists){
@@ -45,14 +45,14 @@ let createUser = async (req, res) => {
                     let token = jwt.sign(payLoad, secretKey)
                     res.status(201).json({data, token})
                 }else{
-                    res.status(500).send("An error has occured whilst saving user, please try again!")
+                    res.status(500).json({msg:"An error has occured whilst saving user, please try again!"})
                 }
             }); 
             }catch(err){
                 res.status(500).send("Unexpected Error")
             }
         }else{
-            res.send("A user with this email already exists")
+            res.json({msg:"A user with this email already exists"}).status(500)
         }
     }
 
@@ -72,10 +72,10 @@ let createUser = async (req, res) => {
                     let token = jwt.sign(payLoad, secretKey)
                     res.json({user, token});
                 }else{
-                    res.send("password entered is incorrect");
+                    res.json({msg:"password entered is incorrect"});
                 }
             }else{
-                res.send("This user cannot be found, please check credentials and try again!");
+                res.json({msg:"This user cannot be found, please check credentials and try again!"});
             }
         }catch(err){
             res.send("Unknown Fail");
@@ -153,6 +153,8 @@ let createUser = async (req, res) => {
             console.log("error")
         }
     }
+
+ 
     
 
 module.exports = { createUser, getUser, updateUser, addAddress, deleteUser }
