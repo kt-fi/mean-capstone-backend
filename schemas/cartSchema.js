@@ -2,15 +2,13 @@ let mongoose = require("mongoose");
 
 let Schema = mongoose.Schema;
 
-let basketSchema = new Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+let cartSchema = new Schema({
+    uid: { type: String },
     products: [
       {
-        productId: Number,
+        pid: String,
         quantity: Number,
-        name: String,
-        price: Number
     }]
 })
 
-    module.exports = mongoose.model('Basket', basketSchema)
+module.exports = mongoose.model('Cart', cartSchema)

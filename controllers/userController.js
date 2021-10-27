@@ -6,7 +6,8 @@ const jwt = require("jsonwebtoken");
 
 let { secretKey } = require("../config/config")
 const User = require("../schemas/userSchema");
-
+const Cart = require("../schemas/cartSchema");
+const WishList = require("../schemas/wishlistSchema");
 
 //CREATE NEW USER (ADMIN OR USER)
 let createUser = async (req, res) => {
@@ -154,7 +155,53 @@ let createUser = async (req, res) => {
         }
     }
 
- 
+    let addProductToCart = async(req, res) => {
+        let uid = req.params.uid;
+        let { pid, quantity } = req.body;
+
+        let cart;
+        try{
+            cart = await Cart.findOne({uid});
+            if(cart){
+                cart.products.push({pid, quantity,})
+                await cart.save()
+                res.json(cart)
+            }else{
+                const newCart = await new Cart({
+                    uid,
+                    products: [{ pid, quantity }]
+                  });
+                  await newCart.save();
+                  return res.json(newCart)
+            }
+        }catch(err){
+            res.send("error")
+        }
+    }
+
+    let addProductToWishList = async (req, res) => {
+        let uid = req.params.uid;
+        let { pid, quantity } = req.body;
+
+        let wishList;
+        try{
+            wishList = await WishList.findOne({uid});
+            if(wishList){
+                wishList.products.push({pid, quantity,})
+                await wishList.save()
+                res.json(wishList)
+            }else{
+                const newWishList = await new WishList({
+                    uid,
+                    products: [{ pid, quantity }]
+                  });
+                  await newWishList.save();
+                  return res.json(newWishList)
+            }
+        }catch(err){
+            res.send("error")
+        }
+    }
     
 
-module.exports = { createUser, getUser, updateUser, addAddress, deleteUser }
+module.exports = { createUser, getUser, updateUser, addAddress, deleteUser, addProductToCart, addProductToWishList }

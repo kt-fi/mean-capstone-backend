@@ -9,7 +9,7 @@ const userSchema = new Schema({
     utype: {type: String, required: true},
     password: {type: String, required: true},
     address: {type: Object, required: false},
-    basket: {type: mongoose.Types.ObjectId, ref: 'Basket'},
+    cart: {type: mongoose.Types.ObjectId, ref: 'Cart'},
     likedItems: [{type: mongoose.Types.ObjectId, ref: 'Product'}]
 })
 
