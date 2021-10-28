@@ -39,7 +39,7 @@ let getUserCartList = async (req, res) => {
             return res.json({msg: "No User Cart Found"})
         }
 
-        return res.json(cart)
+        return res.json(cart.products.toObject({getters:true}))
            
     }catch(err){
         return res.json({msg: "An Unexpected Error occured"})
@@ -65,7 +65,7 @@ let deleteCartItem = async (req, res) =>{
         return res.json({msg:"Unexpected Error"})
     }
        
-   return res.json(cart)
+   return res.json(cart.toObject({getters:true}))
     
     
 }
