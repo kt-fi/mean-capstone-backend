@@ -20,7 +20,7 @@ router.put("/:uid/addAddress",[check('address').not().isEmpty()],
                                 
 router.delete("/:uid/deleteUser", userController.deleteUser);
 
-router.put("/addProductToCart/:uid", userController.addProductToCart);
-router.put("/addProductToWishList/:uid", userController.addProductToWishList)
+
+
 
 module.exports = router;

@@ -4,6 +4,7 @@ let cors = require("cors")
 
 let userRoutes = require("./routers/userRouter");
 let productRoutes = require("./routers/productRouter");
+let cartRouter = require("./routers/cartRouter");
 
 let app = express();
 
@@ -23,6 +24,7 @@ mongoose.connect("mongodb://localhost:27017/myCapstoneDB", { useUnifiedTopology:
 
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
+app.use("/cart", cartRouter);
 
 
 

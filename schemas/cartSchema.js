@@ -7,7 +7,10 @@ let cartSchema = new Schema({
     products: [
       {
         pid: String,
+        pname: String,
+        pimage: String,
         quantity: Number,
+        price:Number
     }]
 })
 

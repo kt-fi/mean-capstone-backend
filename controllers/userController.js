@@ -50,7 +50,7 @@ let createUser = async (req, res) => {
                 }
             }); 
             }catch(err){
-                res.status(500).send("Unexpected Error")
+                res.status(500).json({msg:"Unexpected Error"})
             }
         }else{
             res.json({msg:"A user with this email already exists"}).status(500)
@@ -155,29 +155,6 @@ let createUser = async (req, res) => {
         }
     }
 
-    let addProductToCart = async(req, res) => {
-        let uid = req.params.uid;
-        let { pid, quantity } = req.body;
-
-        let cart;
-        try{
-            cart = await Cart.findOne({uid});
-            if(cart){
-                cart.products.push({pid, quantity,})
-                await cart.save()
-                res.json(cart)
-            }else{
-                const newCart = await new Cart({
-                    uid,
-                    products: [{ pid, quantity }]
-                  });
-                  await newCart.save();
-                  return res.json(newCart)
-            }
-        }catch(err){
-            res.send("error")
-        }
-    }
 
     let addProductToWishList = async (req, res) => {
         let uid = req.params.uid;
@@ -187,7 +164,7 @@ let createUser = async (req, res) => {
         try{
             wishList = await WishList.findOne({uid});
             if(wishList){
-                wishList.products.push({pid, quantity,})
+                wishList.products.push({pid, quantity})
                 await wishList.save()
                 res.json(wishList)
             }else{
@@ -202,6 +179,8 @@ let createUser = async (req, res) => {
             res.send("error")
         }
     }
+
+  
     
 
-module.exports = { createUser, getUser, updateUser, addAddress, deleteUser, addProductToCart, addProductToWishList }
+module.exports = { createUser, getUser, updateUser, addAddress, deleteUser }
