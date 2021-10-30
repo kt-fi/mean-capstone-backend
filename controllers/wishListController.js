@@ -46,10 +46,8 @@ let getWishList = async (req, res) =>{
 let deleteWishListItem = async (req, res) => {
     let uid = req.params.uid;
     let itemId = req.params.itemId;
-
-
+    
     let wishList = await WishList.findOne({uid});
-
 
     if(!wishList){
         return res.json({err:"No User List could be found"})

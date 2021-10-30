@@ -11,8 +11,21 @@ let addProductToCart = async(req, res) => {
     try{
         cart = await Cart.findOne({uid});
         if(cart){
-            cart.products.push({pid, pname, pimage, quantity, price})
-            await cart.save()
+
+            if(cart){
+                let productIndex = cart.products.findIndex(p => p.pid == pid)
+                if(productIndex > -1){
+                    let productItem = cart.products[productIndex];
+                    productItem.quantity = quantity;
+                    cart.products[productIndex] = productItem;
+                    await cart.save();
+                }else{
+                    cart.products.push({pid, pname, pimage, quantity, price})
+                    await cart.save()
+                }
+                   
+                }
+                
             return res.json(cart)
         }else{
             const newCart = await new Cart({
