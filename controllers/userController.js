@@ -129,7 +129,7 @@ let createUser = async (req, res) => {
             if(user){
                 user.address = address;
                 user.save()
-                res.status(200).json(user)
+                res.status(200).json(user.address)
             }else{
                  res.status(500).send("Adding Address to user has been unsuccesful, please try again!!")
             }
@@ -152,31 +152,6 @@ let createUser = async (req, res) => {
             }
         }catch(err){
             console.log("error")
-        }
-    }
-
-
-    let addProductToWishList = async (req, res) => {
-        let uid = req.params.uid;
-        let { pid, quantity } = req.body;
-
-        let wishList;
-        try{
-            wishList = await WishList.findOne({uid});
-            if(wishList){
-                wishList.products.push({pid, quantity})
-                await wishList.save()
-                res.json(wishList)
-            }else{
-                const newWishList = await new WishList({
-                    uid,
-                    products: [{ pid, quantity }]
-                  });
-                  await newWishList.save();
-                  return res.json(newWishList)
-            }
-        }catch(err){
-            res.send("error")
         }
     }
 
