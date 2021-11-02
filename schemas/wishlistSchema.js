@@ -9,6 +9,8 @@ let wishlistSchema = new Schema({
         pid: String,
         pname: String,
         pimage: String,
+        quantity: Number,
+        price:Number
     }]
 })
 

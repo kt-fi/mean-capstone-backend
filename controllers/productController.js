@@ -17,14 +17,14 @@ let createProduct = async (req, res) => {
         });
         await product.save((err, data)=>{
             if(!err){
-                res.json(data)
+                return res.status(201).json(data)
             }else{
-                res.send(err)
+                return res.status(500).json({msg: "Unable to save product please try again."})
             }
         });
         
     }catch(err){
-        console.log(err)
+        return res.status(500).json({msg: "An Unknown error has occured"})
     }
 }
 
@@ -33,12 +33,25 @@ let getProducts = async (req, res) => {
     try{
         products = await Product.find({});
         if(!products){
-            res.send("No Products")
+            return res.status(404).json({msg:"No Products In this Cart, Please select some items!!"})
         }else{
-            res.json(products)
+           return res.status(200).json(products)
         }
     }catch(err){
-       res.send("An Error")
+        return res.status(500).json({msg: "An Unknown error has occured"})
+    }
+}
+
+let getProductById = async (req, res) =>{
+    let pid = req.params.pid;
+
+    let product;
+    try{
+        product = await Product.findOne({pid});
+        return res.json(product).status(200)
+    }catch(err){
+        return res.status(500).json({msg: "An Unknown error has occured"})
+    
     }
 }
 
@@ -59,14 +72,14 @@ let editProduct = async (req, res) => {
             product.offer = offer;
 
             product.save()
-            res.json(product)
+            return res.status(200).json(product)
         }else{
-            res.json({msg: "Unable to Update the product please try again."})
+            return res.status(500).json({msg: "Unable to Update the product please try again."})
         }
     }catch(err){
-        res.send("err")
+        return res.status(500).json({msg: "An Unknown error has occured"})
     }
     
 }
 
-module.exports = { createProduct, getProducts, editProduct }
+module.exports = { createProduct, getProducts, getProductById, editProduct }

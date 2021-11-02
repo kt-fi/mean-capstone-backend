@@ -14,7 +14,7 @@ let createUser = async (req, res) => {
     let errors = validationResult(req);
 
     if(!errors.isEmpty()){
-       return res.status(422).json({msg:"errors exist in your sign up form please check all required inpts"})
+       return res.json({msg:"errors exist in your sign up form please check all required inpts"}).status(422)
     }
 
     let { uname, email, utype, password } = req.body;
@@ -27,7 +27,7 @@ let createUser = async (req, res) => {
         try{
             userExists = await User.findOne({email: email})
         }catch(err){
-            res.status(500).send("An unexpected error occured!!")
+            return res.status(500).json({msg:"An unexpected error occured!!"})
         }
 
         if(!userExists){
@@ -44,16 +44,16 @@ let createUser = async (req, res) => {
                 if(!err){
                     let payLoad = {uid: uid, email:email, utype: utype};
                     let token = jwt.sign(payLoad, secretKey)
-                    res.status(201).json({data, token})
+                    return res.json({data, token})
                 }else{
-                    res.status(500).json({msg:"An error has occured whilst saving user, please try again!"})
+                    return res.json({msg:"An error has occured whilst saving user, please try again!"}).status(500)
                 }
             }); 
             }catch(err){
-                res.status(500).json({msg:"Unexpected Error"})
+                return res.json({msg:"Unexpected Error"}).status(500)
             }
         }else{
-            res.json({msg:"A user with this email already exists"}).status(500)
+            return res.json({msg:"A user with this email already exists"}).status(500)
         }
     }
 
@@ -70,16 +70,27 @@ let createUser = async (req, res) => {
               isPassword = await bcrypt.compare(password, user.password)
                 if(isPassword == true){
                     let payLoad = {uid: user.uid, email: user.email, utype: user.utype};
-                    let token = jwt.sign(payLoad, secretKey)
-                    res.json({user, token});
+                    let token = await jwt.sign(payLoad, secretKey)
+                    return res.json({user, token}).status(200);
                 }else{
-                    res.json({msg:"password entered is incorrect"});
+                    return res.json({msg:"password entered is incorrect"}).status(403);
                 }
             }else{
-                res.json({msg:"This user cannot be found, please check credentials and try again!"});
+                return res.json({msg:"This user cannot be found, please check credentials and try again!"}).status(403);
             }
         }catch(err){
-            res.send("Unknown Fail");
+            return res.send("Unknown Fail").status(500);
+        }
+    }
+
+    let getUserAddress = async (req, res) => {
+        let uid = req.params.uid;
+
+        try{
+            user = await User.findOne({uid})
+            return res.json(user).status(200)
+        }catch(err){
+            return res.send("Unknown Error").status(500);
         }
     }
 
@@ -89,7 +100,7 @@ let createUser = async (req, res) => {
         let errors = validationResult(req);
 
         if(!errors.isEmpty()){
-            return res.json(errors)
+            return res.status(501).json("You have errors in the form, please check and try again!")
         }
     
         let uid = req.params.uid;
@@ -104,12 +115,12 @@ let createUser = async (req, res) => {
           updateUser.email = email;
           updateUser.address = address;
 
-          updateUser.save();
-          return res.json(updateUser)
+          await updateUser.save();
+          return res.ststus(200).json(updateUser)
 
 
         }catch(err){
-            console.log(err)
+            return res.status(500).json({msg: "An Unknown error has occured"})
         }
     }
 
@@ -128,13 +139,13 @@ let createUser = async (req, res) => {
             user = await User.findOne({uid:uid})
             if(user){
                 user.address = address;
-                user.save()
-                res.status(200).json(user.address)
+                await user.save()
+                return res.status(200).json(user.address)
             }else{
-                 res.status(500).send("Adding Address to user has been unsuccesful, please try again!!")
+                 return res.status(500).json({msg:"Adding Address to user has been unsuccesful, please try again!!"})
             }
         }catch(err){
-            res.status(502).send("Something went wrong! Please try again")
+            return res.status(502).json({msg:"Something went wrong! Please try again"})
         }
     }
 
@@ -146,16 +157,16 @@ let createUser = async (req, res) => {
             uidExists = await User.findOne({uid})
             if(uidExists){
                 await User.deleteOne({uid:uid});
-                res.send(`user with id ${uid} has been succesfuly removed from the database`) 
+                return res.status(204).json({msg: `user with id ${uid} has been succesfuly removed from the database`}) 
             }else{
-                res.send(`user with id ${uid} does not appear to exist`) 
+               return  res.status(404).json({msg:`user with id ${uid} does not appear to exist`}) 
             }
         }catch(err){
-            console.log("error")
+            return res.status(500).json({msg: "An Unknown error has occured"})
         }
     }
 
   
     
 
-module.exports = { createUser, getUser, updateUser, addAddress, deleteUser }
+module.exports = { createUser, getUser, getUserAddress, updateUser, addAddress, deleteUser }

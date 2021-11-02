@@ -26,17 +26,17 @@ let addProductToCart = async(req, res) => {
                    
                 }
                 
-            return res.json(cart)
+            return res.status(201).json(cart)
         }else{
             const newCart = await new Cart({
                 uid,
                 products: [{ pid, pname, pimage, quantity, price }]
               });
               await newCart.save();
-              return res.json(newCart)
+              return res.status(201).json(newCart)
         }
     }catch(err){
-        res.send("error")
+        return res.status(500).json({msg: "An Unknown error has occured"})
     }
 }
 
@@ -49,13 +49,13 @@ let getUserCartList = async (req, res) => {
         cart = await Cart.findOne({uid});
 
         if(!cart){
-            return res.json({msg: "No User Cart Found"})
+            return res.status(404).json({msg: "No User Cart Found, please add some items from the shop!"})
         }
 
-        return res.json(cart.products.toObject({getters:true}))
+        return res.status(200).json(cart.products.toObject({getters:true}))
            
     }catch(err){
-        return res.json({msg: "An Unexpected Error occured"})
+        return res.status(500).json({msg: "An Unexpected Error occured"})
     }
 }
 
@@ -69,13 +69,13 @@ let deleteCartItem = async (req, res) =>{
 
 
     if(!cart){
-        return res.json({err:"No User Cart could be found"})
+        return res.status(404).json({err:"No User Cart could be found"})
     }
     try{
         await cart.products.pull({_id: cartProduct})
         cart.save()
     }catch(err){
-        return res.json({msg:"Unexpected Error"})
+        return res.status(500).json({msg: "An Unknown error has occured"})
     }
        
    return res.json(cart.toObject({getters:true}))
