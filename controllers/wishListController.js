@@ -9,19 +9,32 @@ let addProductToWishList = async (req, res) => {
     try{
         wishList = await WishList.findOne({uid});
         if(wishList){
-            wishList.products.push({ pid, pname, pimage, quantity, price })
-            await wishList.save()
-            return res.json(wishList).status(200)
+
+            if(wishList){
+                let productIndex = wishList.products.findIndex(p => p.pid == pid)
+                if(productIndex > -1){
+                    let productItem = wishList.products[productIndex];
+                    productItem.quantity = quantity;
+                    wishList.products[productIndex] = productItem;
+                    await wishList.save();
+                }else{
+                    wishList.products.push({pid, pname, pimage, quantity, price})
+                    await wishList.save()
+                }
+                   
+                }
+                
+            return res.status(201).json(wishList)
         }else{
-            const newWishList = await new WishList({
+            const newCart = await new Cart({
                 uid,
                 products: [{ pid, pname, pimage, quantity, price }]
               });
-              await newWishList.save();
-              return res.json(newWishList).status(201)
+              await newCart.save();
+              return res.status(201).json(newCart)
         }
     }catch(err){
-        res.send(err)
+        return res.status(500).json({msg: "An Unknown error has occured"})
     }
 }
 
