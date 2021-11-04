@@ -39,7 +39,7 @@ let getProducts = async (req, res) => {
 
     let {page, limit} = req.query;
 
-  
+
 
     let products;
     try{
@@ -47,10 +47,17 @@ let getProducts = async (req, res) => {
         .limit(limit * 1)
         .skip((page - 1) * limit)
         .exec();
+
+        const count = await Product.countDocuments();
+
         if(!products){
             return res.status(404).json({msg:"No Products In this Cart, Please select some items!!"})
         }else{
-           return res.status(200).json(products)
+           return res.status(200).json({
+            products,
+            totalPages: Math.ceil(count / limit),
+            currentPage: Number(page)
+        })
         }
     }catch(err){
         return res.status(500).json({msg: "An Unknown error has occured"})
