@@ -6,7 +6,8 @@ const { check } = require("express-validator");
 
 const router = express.Router();
 
-router.post("/createProduct",  auth.verifyUserToken, auth.IsAdmin,
+router.post("/createProduct",  
+                                auth.verifyUserToken, auth.IsAdmin,
                                 [check("pname").not().isEmpty(),
                                 check("description").not().isEmpty(),
                                 check("price").not().isEmpty(),
