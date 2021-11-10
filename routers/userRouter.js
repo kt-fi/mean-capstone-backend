@@ -5,7 +5,7 @@ const userController = require("../controllers/userController");
 const router = express.Router()
 
 
-router.post("/createUser",[check('uname').not().isEmpty().isLength({min:5}), 
+router.post("/createUser",[check('uname').not().isEmpty().isLength({min:3}), 
                             check('email').isEmail(), 
                             check('password').not().isEmpty().isLength({min:6})],
                             userController.createUser);
