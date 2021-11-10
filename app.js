@@ -13,7 +13,7 @@ app.use(express.json())
 app.use(cors())
 
 //CONNECT TO MONGODB
-mongoose.connect("mongodb://localhost:27017/myCapstoneDB", { useUnifiedTopology: true, useNewUrlParser: true }, (err)=>{
+mongoose.connect("mongodb+srv://admin:admin@cluster0.nsudx.mongodb.net/groceryStore?retryWrites=true&w=majority", { useUnifiedTopology: true, useNewUrlParser: true }, (err)=>{
     if(!err){
         console.log("connected to DB");
     }else{
@@ -31,3 +31,5 @@ app.use("/wishList", wishListRouter);
 
 //LISTEN ON PORT 3001
 app.listen(3001, console.log("Server Listening on Port 3001"));
+
+module.exports = app;
