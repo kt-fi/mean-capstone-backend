@@ -39,8 +39,6 @@ let getProducts = async (req, res) => {
 
     let {page, limit} = req.query;
 
-
-
     let products;
     try{
         products = await Product.find({})
