@@ -30,6 +30,6 @@ app.use("/wishList", wishListRouter);
 
 
 //LISTEN ON PORT 3001
-app.listen(3001, console.log("Server Listening on Port 3001"));
+app.listen(process.env.PORT || 8080, console.log("Server Listening on Port 8080"));
 
 module.exports = app;
